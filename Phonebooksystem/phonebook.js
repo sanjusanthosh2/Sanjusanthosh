@@ -47,6 +47,7 @@ let phoneBook = new PhoneBook();
 phoneBook.addContact("sanjusanthosh", "858188638");
 phoneBook.addContact("Akansha", "9912965372");
 phoneBook.addContact("kumar", "9440379282");
+phoneBook.addContact("HariKiran", "982349282");
 
 // Search for a contact
 let searchResult = phoneBook.binarySearchContact("kumar");

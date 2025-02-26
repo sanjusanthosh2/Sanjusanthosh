@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Basket Component Example</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .basket { margin-top: 20px; padding: 10px; border: 1px solid #ccc; }
+        .item { margin: 5px 0; }
+        .total { font-weight: bold; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <h2>Basket Testing with Component</h2>
+
+    <p>Product: <input type="text" id="product"></p>
+    <p>Quantity: <input type="number" id="quantity"></p>
+    <button onclick="addItem()">Add Item</button>
+
+    <h3>Basket</h3>
+    <div id="basketComponent" class="basket"></div>
+
+    <h3>Enter Prices (JSON format)</h3>
+    <textarea id="prices">{"apple": 1.5, "banana": 0.75, "orange": 1.2}</textarea>
+    <br>
+    <button onclick="calculateTotal()">Calculate Total</button>
+
+    <h3>Total Cost: <span id="totalCost">$0.00</span></h3>
+
+    <script>
+        class Basket {
+            constructor() {
+                this.items = {};
+            }
+
+            addItem(product, qty) {
+                if (!this.items[product]) {
+                    this.items[product] = 0;
+                }
+                this.items[product] += qty;
+            }
+
+            getCost(prices) {
+                let total = 0;
+                for (let product in this.items) {
+                    if (prices[product]) {
+                        total += this.items[product] * prices[product];
+                    }
+                }
+                return total;
+            }
+        }
+
+        class BasketComponent {
+            constructor(basket) {
+                this.basket = basket;
+            }
+
+            render() {
+                const basketDiv = document.getElementById("basketComponent");
+                basketDiv.innerHTML = ""; // Clear the previous content
+
+                // Display each item in the basket
+                for (let product in this.basket.items) {
+                    const itemDiv = document.createElement("div");
+                    itemDiv.classList.add("item");
+                    itemDiv.innerText = `${product}: ${this.basket.items[product]}`;
+                    basketDiv.appendChild(itemDiv);
+                }
+            }
+        }
+
+        const myBasket = new Basket();
+        const basketComponent = new BasketComponent(myBasket);
+
+        function addItem() {
+            const product = document.getElementById("product").value;
+            const quantity = parseInt(document.getElementById("quantity").value);
+
+            if (product && quantity > 0) {
+                myBasket.addItem(product, quantity);
+                basketComponent.render();
+            }
+        }
+
+        function calculateTotal() {
+            try {
+                const prices = JSON.parse(document.getElementById("prices").value);
+                const total = myBasket.getCost(prices);
+                document.getElementById("totalCost").innerText = "$" + total.toFixed(2);
+            } catch (error) {
+                alert("Invalid JSON format.");
+            }
+        }
+    </script>
+
+</body>
+</html>
